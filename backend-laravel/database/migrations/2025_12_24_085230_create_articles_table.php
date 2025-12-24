@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->text('original_content');
+            $table->text('updated_content')->nullable();
             $table->string('source_url')->unique();
             $table->timestamps();
         });

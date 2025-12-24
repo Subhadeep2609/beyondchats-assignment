@@ -9,20 +9,32 @@ use Illuminate\Http\Request;
 class ArticleController extends Controller
 {
     public function index()
-    {
-        return Article::all();
-    }
+{
+    return response()->json(
+        \App\Models\Article::select(
+            'id',
+            'title',
+            'original_content',
+            'updated_content',
+            'source_url',
+            'created_at',
+            'updated_at'
+        )->get()
+    );
+}
+
 
     public function update(Request $request, Article $article)
     {
-        $request->validate([
-            'updated_content' => 'required|string',
+        $data = $request->validate([
+            'updated_content' => 'required|string'
         ]);
 
         $article->update([
-            'updated_content' => $request->updated_content,
+            'updated_content' => $data['updated_content']
         ]);
 
         return response()->json($article);
     }
+
 }
