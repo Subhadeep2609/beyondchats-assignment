@@ -10,28 +10,19 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        return Article::latest()->get();
-    }
-
-    public function store(Request $request)
-    {
-        return Article::create($request->all());
-    }
-
-    public function show(Article $article)
-    {
-        return $article;
+        return Article::all();
     }
 
     public function update(Request $request, Article $article)
     {
-        $article->update($request->all());
-        return $article;
-    }
+        $request->validate([
+            'updated_content' => 'required|string',
+        ]);
 
-    public function destroy(Article $article)
-    {
-        $article->delete();
-        return response()->noContent();
+        $article->update([
+            'updated_content' => $request->updated_content,
+        ]);
+
+        return response()->json($article);
     }
 }
