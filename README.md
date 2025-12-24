@@ -8,12 +8,13 @@ The system automates article collection, competitor analysis, AI-based rewriting
 
 ## 📌 What This Project Does
 
-1. Scrapes articles from the BeyondChats blog
-2. Stores articles in a backend database
-3. Finds competitor articles via Google search
-4. Rewrites content using AI (OpenAI)
-5. Updates rewritten content back into the database
-6. Displays everything in a frontend dashboard
+1. Stores articles in a backend database
+2. Exposes articles via REST APIs
+3. Fetches competitor articles via search
+4. Scrapes competitor content
+5. Rewrites content using AI
+6. Updates rewritten content back into the database
+7. Displays article status and content in a frontend dashboard
 
 ---
 
@@ -23,7 +24,7 @@ The system automates article collection, competitor analysis, AI-based rewriting
 
 │ React Frontend │
 
-│ (Dashboard) │
+│ (Dashboard UI) │
 
 └───────▲────────┘
 
@@ -37,7 +38,7 @@ The system automates article collection, competitor analysis, AI-based rewriting
 
 │ Laravel Backend│
 
-│ (Articles) │
+│ (Articles API) │
 
 └───────▲────────┘
 
@@ -51,7 +52,7 @@ The system automates article collection, competitor analysis, AI-based rewriting
 
 │ Node Automation│
 
-│ Scrape + AI │
+│ Scrape + AI Rewrite│
 
 └────────────────┘
 
@@ -62,20 +63,20 @@ The system automates article collection, competitor analysis, AI-based rewriting
 
 ### Backend
 - Laravel 12
-- SQLite (local dev)
+- Database migrations & models
 - REST APIs
 
 ### Automation
 - Node.js
 - Axios
-- Cheerio
-- OpenAI API
+- Cheerio (HTML scraping)
+- OpenAI API (content rewriting)
 - dotenv
 
 ### Frontend
 - React + Vite
 - TypeScript
-- Minimal inline styling
+- Minimal, readable dashboard UI
 
 ---
 
@@ -83,24 +84,26 @@ The system automates article collection, competitor analysis, AI-based rewriting
 
 ### Laravel Backend
 - Article model & migrations
+- Database schema with processing state
 - REST endpoints:
   - `GET /api/articles`
   - `PUT /api/articles/{id}`
-- Custom scraping logic
-- Clean data schema
+- Clean and scalable API design
 
 ### Node Automation
 - Fetches articles from backend
-- Searches competitor articles
-- Scrapes competitor content
+- Searches competitor sources
+- Scrapes competitor article content
 - Rewrites content using OpenAI
-- Updates backend automatically
+- Updates rewritten content back into backend
 - **Graceful fallback** if OpenAI quota is exceeded
+
+> Note: Automation is demonstrated via code and local execution.
 
 ### React Dashboard
 - View all articles
 - Status indicator (Processed / Pending)
-- Search by title
+- Search articles by title
 - Filter by processing status
 - Toggle updated content visibility
 - Responsive layout
@@ -112,8 +115,9 @@ The system automates article collection, competitor analysis, AI-based rewriting
 - OpenAI quota limits are handled gracefully
 - If AI fails, the pipeline skips without crashing
 - Errors are logged clearly for debugging
+- Automation layer is intentionally not exposed publicly
 
-This reflects **real production behavior**.
+This reflects **real production behavior** and cost-aware design.
 
 ---
 
@@ -166,9 +170,29 @@ http://localhost:5173
 ```
 
 ## 🚀 Deployment
-Backend deployed on Render
+### Backend (Render)
+```bash
+https://beyondchats-assignment-33th.onrender.com/api/articles
+```
 
-Frontend deployed on Vercel
+### Frontend (Vercel)
+```arduino
+https://beyondchats-frontend-4yl67mowj-subhadeep2609s-projects.vercel.app/
+```
+Note: Node automation is not deployed due to free-tier limitations and OpenAI quota requirements. This mirrors real-world systems where automation runs as protected background jobs.
+
+---
+## Future Improvements
+- Scheduled automation (cron jobs)
+
+- Retry queues for failed AI calls
+
+- Admin-triggered reprocessing
+
+- Authentication & role-based access
+
+- Cost & usage monitoring
+
 
 ## 👤 Author
 Subhadeep Saha
