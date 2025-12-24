@@ -28,8 +28,15 @@ async function run() {
         continue;
       }
 
-      console.log("Rewriting content with OpenAI...");
-      const rewritten = await rewriteContent(competitorText);
+      let rewritten;
+
+      try {
+        console.log("Rewriting content with OpenAI...");
+        rewritten = await rewriteContent(competitorText);
+      } catch (err) {
+        console.warn("OpenAI failed, using fallback content");
+        rewritten = competitorText.slice(0, 1000);
+      }
 
       console.log(`Rewritten content length: ${rewritten.length}`);
 
@@ -41,6 +48,11 @@ async function run() {
 
       console.log(`Updated article ID ${article.id}`);
     } catch (err) {
+      if (err.response?.status === 429) {
+        console.log("⚠️ OpenAI quota exceeded. Skipping rewrite.");
+        continue;
+      }
+
       console.error("ERROR processing article:");
       if (err.response) {
         console.error(err.response.data);
