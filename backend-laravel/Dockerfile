@@ -19,7 +19,9 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Permissions
-RUN chmod -R 775 storage bootstrap/cache
+RUN mkdir -p storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
 
 # Expose Render port
 EXPOSE 10000
