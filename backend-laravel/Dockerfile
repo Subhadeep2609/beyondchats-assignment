@@ -4,28 +4,25 @@ FROM php:8.3-cli
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libzip-dev \
-    libonig-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip gd
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
+# Copy project files
 COPY . .
 
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-RUN php artisan key:generate
+# Permissions
+RUN chmod -R 775 storage bootstrap/cache
 
-RUN php artisan migrate --force || true
-
+# Expose Render port
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Run migrations and start server
+CMD php artisan migrate --force && php -S 0.0.0.0:$PORT -t public
